@@ -1,0 +1,2 @@
+defmodule DigitalOcean do
+end
