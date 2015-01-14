@@ -1,6 +1,7 @@
 defmodule DigitalOcean.Regions do
 
   @derive [Access]
+  require DigitalOcean.Macros, as: Macros
 
   defmodule Region do
     @derive [Access]
@@ -12,13 +13,7 @@ defmodule DigitalOcean.Regions do
   end
 
   defstruct(regions: [], links: %{}, meta: %{})
-
-  def as_struct(data) do
-    s = struct(__MODULE__, data)
-    list = Enum.map(s.regions,
-      fn(x) -> struct(DigitalOcean.Regions.Region, x) end)
-    %{ s | regions: list }
-  end
+  Macros.define_as_struct(:regions, DigitalOcean.Regions.Region)
 
 end
 
