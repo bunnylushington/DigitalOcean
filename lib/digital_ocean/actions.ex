@@ -19,6 +19,8 @@ defmodule DigitalOcean.Actions do
   defstruct(actions: [], links: %{}, meta: %{})
   Macros.define_as_struct(:actions, DigitalOcean.Actions.Action)
 
+  def get_next_page(url), do: as_struct(DigOc.page!(url))
+
 
   defimpl Enumerable, for: __MODULE__ do
     def count(c) do
@@ -37,18 +39,16 @@ defmodule DigitalOcean.Actions do
       {:suspended, acc, &reduce(c, &1, fun)}
     end
 
-    # item list is empty but there's an additional page
-    def reduce(%{:actions => [], :links => %{:pages => %{:next => _next}}},
-               {:cond, acc}, _fun) do
-      case Application.get_env(:digital_ocean, :use_api_paging, false) do
-        true -> :not_implemented
-        false -> {:done, acc}
+    # item list is empty, maybe retrieve the next page
+    def reduce(%{:actions => []} = c, {:cont, acc}, fun) do
+      if (Map.has_key?(c.links, :pages)
+          && Map.has_key?(c.links.pages, :next)
+          && Application.get_env(:digital_ocean, :use_api_paging, false)) do
+        c = DigitalOcean.Actions.get_next_page(c.links.pages.next)
+        reduce(c, {:cont, acc}, fun)
+      else
+        {:done, acc}
       end
-    end
-
-    # item list is empty, no next page
-    def reduce(%{:actions => []}, {:cont, acc}, _fun) do
-      {:done, acc}
     end
 
     # draining down the entry list

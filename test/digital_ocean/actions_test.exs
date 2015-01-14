@@ -62,13 +62,16 @@ defmodule DigitalOcean.ActionsTest do
   end
 
   @tag :external
-  test "retrieve and process actions, paging" do
+  test "retrieve and process actions, with paging" do
     Application.put_env(:digital_ocean, :use_api_paging, true)
-    Application.put_env(:digital_ocean, :actions_per_page, 250)
+    Application.put_env(:digital_ocean, :actions_per_page, 200)
     s = DigitalOcean.actions
     assert Enum.count(s) == s.meta.total
     a = hd(s.actions)
     assert a.__struct__ == DigitalOcean.Actions.Action
+
+    res = for _ <- s, do: :ok
+    assert length(res) == s.meta.total
   end
 
 end
