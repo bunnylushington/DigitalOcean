@@ -1,12 +1,17 @@
 defmodule DigitalOcean.AccountTest do
   use ExUnit.Case
 
-  test "account struct correct" do
-    s = %DigitalOcean.Account{}
-    assert s.droplet_limit == nil
-    assert s.email == nil
-    assert s.uuid == nil
-    assert s[:email_verified] == nil
+  setup do
+    {account_data, _} = Code.eval_file("test/sample-data/account", System.cwd)
+    {:ok, fixtures: account_data}
+  end
+  
+  test "account struct created from fixture", %{ fixtures: account } do
+    s = DigitalOcean.Account.as_struct(account)
+    assert s.droplet_limit == 25
+    assert s.email == "quuxor@example.com"
+    assert s.uuid == "cdbdbsabzb"
+    assert s[:email_verified] == true
   end
 
   @tag :external

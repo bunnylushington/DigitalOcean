@@ -1,0 +1,2 @@
+%{account: %{droplet_limit: 25, email: "quuxor@example.com",
+    email_verified: true, uuid: "cdbdbsabzb"}}
