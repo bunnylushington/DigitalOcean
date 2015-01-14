@@ -1,4 +1,5 @@
 defmodule DigitalOcean.Sizes do
+
   @derive [Access]
 
   defmodule Size do

@@ -51,5 +51,12 @@ defmodule DigitalOcean.SizesTest do
     res = for _ <- s, do: :ok
     assert res == List.duplicate(:ok, Enum.count(s))
   end
-                                                                
+
+  @tag :external
+  test "retrieve and process sizes" do
+    s = DigitalOcean.sizes
+    res = for _ <- s, do: :ok
+    assert res == List.duplicate(:ok, Enum.count(s))
+  end
+  
 end
