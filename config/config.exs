@@ -2,23 +2,13 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-# This configuration is loaded before any dependency and is restricted
-# to this project. If another project depends on this project, this
-# file won't be loaded nor affect the parent project. For this reason,
-# if you want to provide default values for your application for third-
-# party users, it should be done in your mix.exs file.
+config :digital_ocean,
+# use_api_paging: allow the Enumerable implementation to refer to the
+# next page parameter in the result to call back to D.O. for more
+# results.  Doing so will result in slower Enum methods and will chew
+# through allowed requests.  
+use_api_paging: false,
 
-# Sample configuration:
-#
-#     config :logger, :console,
-#       level: :info,
-#       format: "$date $time [$level] $metadata$message\n",
-#       metadata: [:user_id]
-
-# It is also possible to import configuration files, relative to this
-# directory. For example, you can emulate configuration per environment
-# by uncommenting the line below and defining dev.exs, test.exs and such.
-# Configuration from the imported file will override the ones defined
-# here (which is why it is important to import them last).
-#
-#     import_config "#{Mix.env}.exs"
+# per_page_results: the number of results to return when requesting
+# the full list of actions.
+actions_per_page: 100

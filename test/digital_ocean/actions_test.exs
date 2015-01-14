@@ -34,5 +34,41 @@ defmodule DigitalOcean.ActionsTest do
     assert action.__struct__ == DigitalOcean.Actions.Action
     assert action.region == "nyc3"
   end
-   
+
+  test "actions as an enumeration", %{ fixtures: actions } do
+    s = DigitalOcean.Actions.as_struct(actions)
+    assert Enum.member?(s, 41152505)
+  end
+  
+  test "actions as a limited iteration", %{ fixtures: actions } do
+    Application.put_env(:digital_ocean, :use_api_paging, false)
+    s = DigitalOcean.Actions.as_struct(actions)
+    res = for _ <- s, do: :ok
+    assert res == List.duplicate(:ok, length(s[:actions]))
+    assert res == List.duplicate(:ok, Enum.count(s))
+
+    Application.put_env(:digital_ocean, :use_api_paging, true)
+    refute res == Enum.count(s) == length(s[:actions])
+  end
+
+  @tag :external
+  test "retrieve and process actions, no paging" do
+    Application.put_env(:digital_ocean, :use_api_paging, false)
+    Application.put_env(:digital_ocean, :actions_per_page, 101)
+    s = DigitalOcean.actions
+    assert Enum.count(s) == 101
+    a = hd(s.actions)
+    assert a.__struct__ == DigitalOcean.Actions.Action
+  end
+
+  @tag :external
+  test "retrieve and process actions, paging" do
+    Application.put_env(:digital_ocean, :use_api_paging, true)
+    Application.put_env(:digital_ocean, :actions_per_page, 250)
+    s = DigitalOcean.actions
+    assert Enum.count(s) == s.meta.total
+    a = hd(s.actions)
+    assert a.__struct__ == DigitalOcean.Actions.Action
+  end
+
 end
