@@ -14,7 +14,8 @@ defmodule DigitalOcean.Regions do
 
   defstruct(regions: [], links: %{}, meta: %{})
   Macros.define_as_struct(:regions, DigitalOcean.Regions.Region)
-
+  Macros.implement_enumerable(:regions, DigitalOcean.Regions)
+  
 end
 
 # ------------------------- Protocol Implementations.

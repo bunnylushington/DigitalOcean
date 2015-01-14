@@ -30,5 +30,21 @@ defmodule DigitalOcean.RegionsTest do
     assert region.__struct__ == DigitalOcean.Regions.Region
     assert region.slug == "nyc1"
   end
+
+  test "regions as enumeration", %{fixtures: regions} do
+    s = DigitalOcean.Regions.as_struct(regions)
+    assert Enum.count(s) == s.meta[:total]
+    assert Enum.member?(s, "nyc1")
+    refute Enum.member?(s, "xyzzy")
+    assert length(Enum.filter(s, fn(x) -> x.available == true end)) == 8
+  end
+
+  @tag :external
+  test "retrieve and process regions" do
+    s = DigitalOcean.regions
+    res = for _ <- s, do: :ok
+    assert res == List.duplicate(:ok, Enum.count(s))
+  end
+  
   
 end

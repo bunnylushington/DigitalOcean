@@ -46,7 +46,7 @@ defmodule DigitalOcean.SizesTest do
     assert length(Enum.filter(s, fn(x) -> x.disk < 100 end)) == 5
   end
 
-  test "sizes as collectable", %{fixtures: sizes} do
+  test "sizes as an iteration", %{fixtures: sizes} do
     s = DigitalOcean.Sizes.as_struct(sizes)
     res = for _ <- s, do: :ok
     assert res == List.duplicate(:ok, Enum.count(s))
