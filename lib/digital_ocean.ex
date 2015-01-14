@@ -14,5 +14,13 @@ defmodule DigitalOcean do
   def regions do
     DigitalOcean.Regions.as_struct(DigOc.regions!)
   end
+
+
+  @doc """
+  Returns %DigitalOcean.Account{}.
+  """
+  def account do
+    DigitalOcean.Account.as_struct(DigOc.account!)
+  end
   
 end
