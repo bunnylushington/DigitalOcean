@@ -18,9 +18,9 @@ defmodule DigitalOcean.Sizes do
 
   def as_struct(data) do
     s = struct(__MODULE__, data)
-    size_list = Enum.map(s.sizes,
+    list = Enum.map(s.sizes,
       fn(x) -> struct(DigitalOcean.Sizes.Size, x) end)
-    %{ s | sizes: size_list }
+    %{ s | sizes: list }
   end
     
 end
