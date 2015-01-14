@@ -11,7 +11,7 @@ defmodule DigitalOcean.SizesTest do
     assert s.disk == nil
   end
 
-  test "size struct created from fixture", %{fixtures: sizes} do
+  test "size struct created from fixture", %{ fixtures: sizes } do
     data = hd(sizes.sizes)
     s = struct(DigitalOcean.Sizes.Size, data)
     assert s.disk == 20
@@ -24,13 +24,13 @@ defmodule DigitalOcean.SizesTest do
     assert s[:vcpus] == 1
   end
 
-  test "sizes struct created from fixture", %{fixtures: sizes} do
+  test "sizes struct created from fixture", %{ fixtures: sizes } do
     s = struct(DigitalOcean.Sizes, sizes)
     assert length(s.sizes) == s.meta[:total]
     assert s.links == %{}
   end
 
-  test "strut and embedded structs created", %{fixtures: sizes} do
+  test "strut and embedded structs created", %{ fixtures: sizes } do
     s = DigitalOcean.Sizes.as_struct(sizes)
     assert length(s.sizes) == s.meta[:total]
     size = hd(s.sizes)
@@ -38,7 +38,7 @@ defmodule DigitalOcean.SizesTest do
     assert size.slug == "512mb"
   end
 
-  test "sizes as enumeration", %{fixtures: sizes} do
+  test "sizes as enumeration", %{ fixtures: sizes } do
     s = DigitalOcean.Sizes.as_struct(sizes)
     assert Enum.count(s) == s.meta[:total]
     assert Enum.member?(s, "512mb")
@@ -46,7 +46,7 @@ defmodule DigitalOcean.SizesTest do
     assert length(Enum.filter(s, fn(x) -> x.disk < 100 end)) == 5
   end
 
-  test "sizes as an iteration", %{fixtures: sizes} do
+  test "sizes as an iteration", %{ fixtures: sizes } do
     s = DigitalOcean.Sizes.as_struct(sizes)
     res = for _ <- s, do: :ok
     assert res == List.duplicate(:ok, Enum.count(s))
