@@ -18,4 +18,3 @@ defmodule DigitalOcean.Regions do
   
 end
 
-# ------------------------- Protocol Implementations.
