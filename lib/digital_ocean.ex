@@ -1,13 +1,13 @@
 defmodule DigitalOcean do
 
   @doc """
-  Returns %DigitalOcean.Sizes{}.  
+  Returns %DigitalOcean.Account{}.
   """
-  def sizes do
-    DigitalOcean.Sizes.as_struct(DigOc.sizes!)
+  def account do
+    DigitalOcean.Account.as_struct(DigOc.account!)
   end
 
-
+  
   @doc """
   Returns %DigitalOcean.Regions{}.
   """
@@ -15,12 +15,14 @@ defmodule DigitalOcean do
     DigitalOcean.Regions.as_struct(DigOc.regions!)
   end
 
-
+  
   @doc """
-  Returns %DigitalOcean.Account{}.
+  Returns %DigitalOcean.Sizes{}.  
   """
-  def account do
-    DigitalOcean.Account.as_struct(DigOc.account!)
+  def sizes do
+    DigitalOcean.Sizes.as_struct(DigOc.sizes!)
   end
+
+
   
 end

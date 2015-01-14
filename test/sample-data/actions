@@ -1,0 +1,14 @@
+%{actions: [
+   %{completed_at: "2015-01-13T08:46:12Z", id: 41152505,
+     region: "nyc3", resource_id: 2802209, resource_type: "droplet",
+     started_at: "2015-01-13T08:39:31Z", status: "completed", type: "backup"},
+   %{completed_at: "2015-01-10T16:07:39Z", id: 40940233, region: "nyc3",
+     resource_id: 3723327, resource_type: "droplet",
+     started_at: "2015-01-10T16:07:36Z", status: "completed", type: "destroy"},
+   %{completed_at: "2015-01-09T20:31:21Z", id: 40885160, region: "nyc3",
+     resource_id: 3723351, resource_type: "droplet",
+     started_at: "2015-01-09T20:31:16Z", status: "completed", type: "destroy"}],
+  links: %{pages:
+    %{last: "https://api.digitalocean.com/v2/actions?page=382&per_page=3",
+      next: "https://api.digitalocean.com/v2/actions?page=2&per_page=3"}},
+   meta: %{total: 1145}}
