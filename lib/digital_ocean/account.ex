@@ -1,7 +1,6 @@
 defmodule DigitalOcean.Account do
 
   @derive [Access]
-  require DigitalOcean.Macros, as: Macros
 
   defstruct(droplet_limit:  nil,
             email:          nil,
