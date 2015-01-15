@@ -1,5 +1,8 @@
 defmodule DigitalOcean.Macros do
 
+  @doc """
+  
+  """
   defmacro define_as_struct(key, type) do
     quote do
       def as_struct(data) do
@@ -11,6 +14,18 @@ defmodule DigitalOcean.Macros do
     end
   end
 
+  @doc """ 
+  Aids in implementing the Enumerable protocol.
+
+  This means that count/1, member?/2, and reduce/3 are defined.  KEY
+  refers to the list of items (:actions, :sizes, &c.) that constitute
+  the bits that are being enumerated over.  TYPE is the module that is
+  implementing the protocol.  
+
+  When member?/2 is defined a heuristic is employed whereby membership
+  is determined by comparing with the :slug key of the item if the
+  argument is a string and :id if it is an integer.
+  """
   defmacro implement_enumerable(key, type) do
     quote do
       defimpl Enumerable, for: unquote(type) do

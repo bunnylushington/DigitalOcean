@@ -74,4 +74,19 @@ defmodule DigitalOcean.ActionsTest do
     assert length(res) == s.meta.total
   end
 
+  @tag :external
+  test "retrieve a single valid action" do
+    Application.put_env(:digital_ocean, :use_api_paging, false)
+    id = hd(DigitalOcean.actions(1).actions)[:id]
+    assert {:ok, res} = DigitalOcean.action(id)
+    assert res[:id] == id
+    assert ^res = DigitalOcean.action!(id)
+  end
+
+  @tag :external
+  test "retrieve a single invalid action" do
+    assert {:error, _} = DigitalOcean.action(1)
+    assert_raise DigitalOceanError, fn -> DigitalOcean.action!(1) end
+  end
+
 end

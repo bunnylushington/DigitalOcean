@@ -18,6 +18,27 @@ defmodule DigitalOcean do
     DigitalOcean.Actions.as_struct(DigOc.actions!(per_page))
   end
 
+
+  @doc """
+  Returns {:ok, %DigitalOcean.Actions.Action{}} or {:error, result}
+  """
+  def action(id) do
+    a = DigOc.action!(id)
+    if Map.has_key?(a, :action) do
+      {:ok, struct(DigitalOcean.Actions.Action, a.action)}
+    else
+      {:error, a}
+    end
+  end
+
+
+  def action!(id) do
+    case action(id) do
+      {:ok, result} -> result
+      {:error, err} -> raise DigitalOceanError, err
+    end
+  end
+  
   
   @doc """
   Returns %DigitalOcean.Regions{}.
