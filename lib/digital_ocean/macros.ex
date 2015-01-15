@@ -53,18 +53,7 @@ defmodule DigitalOcean.Macros do
         def reduce(%{unquote(key) => [h|t]} = c, {:cont, acc}, fun) do
           reduce(%{ c | unquote(key) => t }, fun.(h, acc), fun)
         end
-        
-        #   def reduce(_, {:halt, acc}, _), do: {:halted, acc}
-        #   def reduce(c, {:suspend, acc}, fun) do
-        #     {:suspended, acc, &reduce(c, &1, fun)}
-        #   end
-        #   def reduce(%{unquote(key) => []}, {:cont, acc}, _fun) do
-        #     {:done, acc}
-        #   end
-        #   def reduce(%{unquote(key) => [h|t]} = c, {:cont, acc}, fun) do
-        #     reduce(%{ c | unquote(key) => t }, fun.(h, acc), fun)
-        #   end
-        # end
+
       end
     end
   end
