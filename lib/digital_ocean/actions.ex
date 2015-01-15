@@ -14,6 +14,16 @@ defmodule DigitalOcean.Actions do
               resource_id: nil,
               resource_type: nil,
               region: nil)
+
+    @type t :: %__MODULE__{id: integer,
+                           status: String.t,
+                           type: String.t,
+                           started_at: DigitalOcean.isotime,
+                           completed_at: DigitalOcean.isotime,
+                           resource_id: integer,
+                           resource_type: String.t,
+                           region: DigitalOcean.slug}
+                          
   end
 
   defstruct(actions: [], links: %{}, meta: %{})

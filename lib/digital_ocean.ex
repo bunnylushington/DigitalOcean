@@ -6,11 +6,13 @@ defmodule DigitalOcean do
   @type pages :: %{} | %{:pages => page}
   @type links :: %{:links => pages}
   @type meta :: %{:meta => (%{} | %{:total => integer})}
+  @type isotime :: String.t
+  @type slug :: String.t
   
   @doc """
   Requests the account information associated with the current user.
   """
-  @spec account() :: __MODULE__.Account.t
+  @spec account() :: DigitalOcean.Account.t
   def account do
     DigitalOcean.Account.as_struct(DigOc.account!)
   end
@@ -47,15 +49,17 @@ defmodule DigitalOcean do
   actions but might require multiple HTTP requests.
 
   """
-  @spec actions(integer) :: __MODULE__.Actions.t
+  @spec actions(integer) :: DigitalOcean.Actions.t
   def actions(per_page \\ actions_per_page) do
     DigitalOcean.Actions.as_struct(DigOc.actions!(per_page))
   end
 
 
   @doc """
-  Returns {:ok, %DigitalOcean.Actions.Action{}} or {:error, result}
+  Requests a specific action from the server.
   """
+  @spec action(integer) :: ({:ok, DigitalOcean.Actions.Action.t} |
+                            {:error, any})
   def action(id) do
     a = DigOc.action!(id)
     if Map.has_key?(a, :action) do
@@ -64,8 +68,12 @@ defmodule DigitalOcean do
       {:error, a}
     end
   end
-
-
+  
+  @doc """
+  Like `action/1` but returns the Action struct directly or raises a
+  DigitalOceanException on error.
+  """
+  @spec action!(integer) :: DigitalOcean.Actions.Action.t
   def action!(id) do
     case action(id) do
       {:ok, result} -> result
@@ -75,16 +83,18 @@ defmodule DigitalOcean do
   
   
   @doc """
-  Returns %DigitalOcean.Regions{}.
+  Requests the list of regions from the server.
   """
+  @spec regions :: DigitalOcean.Regions.t
   def regions do
     DigitalOcean.Regions.as_struct(DigOc.regions!)
   end
 
   
   @doc """
-  Returns %DigitalOcean.Sizes{}.  
+  Requests the list of sizes from the server.
   """
+  @spec sizes :: DigitalOcean.Sizes.t
   def sizes do
     DigitalOcean.Sizes.as_struct(DigOc.sizes!)
   end
