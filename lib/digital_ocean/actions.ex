@@ -17,6 +17,10 @@ defmodule DigitalOcean.Actions do
   end
 
   defstruct(actions: [], links: %{}, meta: %{})
+  @type t :: %__MODULE__{actions: [DigitalOcean.Actions.Action],
+                         links: DigitalOcean.links,
+                         meta: DigitalOcean.meta}
+  
   Macros.define_as_struct(:actions, DigitalOcean.Actions.Action)
   Macros.implement_enumerable(:actions, DigitalOcean.Actions)
   def get_next_page(url), do: as_struct(DigOc.page!(url))

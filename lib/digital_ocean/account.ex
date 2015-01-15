@@ -6,6 +6,11 @@ defmodule DigitalOcean.Account do
             email:          nil,
             uuid:           nil,
             email_verified: nil)
+  
+  @type t :: %__MODULE__{droplet_limit:  integer,
+                         email:          String.t,
+                         uuid:           String.t,
+                         email_verified: boolean }
 
   def as_struct(data) do
     %__MODULE__{droplet_limit:  data.account.droplet_limit,
