@@ -1,15 +1,23 @@
 defmodule DigitalOcean.Macros do
 
   @doc """
-  
+  Defines as_struct/1 for the calling module.
+
+  The defined function takes data as returned from the DigOc.x!
+  methods (that is, just the result bodies) and transforms it into a
+  struct of type M where M is the calling module.  
   """
   defmacro define_as_struct(key, type) do
     quote do
       def as_struct(data) do
-        s = struct(__MODULE__, data)
-        list = Enum.map(s[unquote(key)],
-          fn(x) -> struct(unquote(type), x) end)
-        %{ s | unquote(key) => list }
+        if DigitalOcean.Util.error?(data, unquote(key)) do
+          {:error, data}
+        else
+          s = struct(__MODULE__, data)
+          list = Enum.map(s[unquote(key)],
+            fn(x) -> struct(unquote(type), x) end)
+          {:ok, %{ s | unquote(key) => list }}
+        end
       end
     end
   end
@@ -58,7 +66,8 @@ defmodule DigitalOcean.Macros do
           if (Map.has_key?(c.links, :pages)
               && Map.has_key?(c.links.pages, :next)
               && Application.get_env(:digital_ocean, :use_api_paging, false)) do
-            c = apply(unquote(type), :get_next_page, [c.links.pages.next])
+            c = apply(DigitalOcean, :get_next_page,
+                      [c.links.pages.next, unquote(type)])
             reduce(c, {:cont, acc}, fun)
           else
             {:done, acc}

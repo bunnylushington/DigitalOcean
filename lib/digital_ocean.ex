@@ -8,16 +8,25 @@ defmodule DigitalOcean do
   @type meta :: %{:meta => (%{} | %{:total => integer})}
   @type isotime :: String.t
   @type slug :: String.t
+
+
   
   @doc """
   Requests the account information associated with the current user.
   """
-  @spec account() :: DigitalOcean.Account.t
+  @spec account() :: {:ok, DigitalOcean.Account.t} | {:error, map}
   def account do
     DigitalOcean.Account.as_struct(DigOc.account!)
   end
 
-
+  @doc """
+  Like `account/0` but raises DigitalOceanError.
+  """
+  @spec account!() :: DigitalOcean.Account.t
+  def account!(), do: account |> raise_error_or_return
+    
+    
+    
   @doc """ 
   Requests actions associated with the account.  
 
@@ -49,59 +58,88 @@ defmodule DigitalOcean do
   actions but might require multiple HTTP requests.
 
   """
-  @spec actions(integer) :: DigitalOcean.Actions.t
+  @spec actions(integer) :: {:ok, DigitalOcean.Actions.t} | {:error, map}
   def actions(per_page \\ actions_per_page) do
     DigitalOcean.Actions.as_struct(DigOc.actions!(per_page))
   end
+
+  @doc """
+  Like `actions!/1` but raises DigitalOceanError.
+  """
+  @spec actions!(integer) :: DigitalOcean.Actions.t
+  def actions!(per_page \\ actions_per_page) do
+    actions(per_page) |> raise_error_or_return
+  end
+  
 
 
   @doc """
   Requests a specific action from the server.
   """
   @spec action(integer) :: ({:ok, DigitalOcean.Actions.Action.t} |
-                            {:error, any})
+                            {:error, map})
   def action(id) do
     a = DigOc.action!(id)
-    if Map.has_key?(a, :action) do
-      {:ok, struct(DigitalOcean.Actions.Action, a.action)}
-    else
+    if DigitalOcean.Util.error?(a, :action) do
       {:error, a}
+    else
+      {:ok, struct(DigitalOcean.Actions.Action, a.action)}
     end
   end
   
   @doc """
-  Like `action/1` but returns the Action struct directly or raises a
-  DigitalOceanException on error.
+  Like `action/1` but raises DigitalOceanException.
   """
   @spec action!(integer) :: DigitalOcean.Actions.Action.t
-  def action!(id) do
-    case action(id) do
-      {:ok, result} -> result
-      {:error, err} -> raise DigitalOceanError, err
-    end
-  end
+  def action!(id), do: action(id) |> raise_error_or_return
   
+
   
   @doc """
   Requests the list of regions from the server.
   """
-  @spec regions :: DigitalOcean.Regions.t
+  @spec regions :: {:ok, DigitalOcean.Regions.t} | {:error, map}
   def regions do
     DigitalOcean.Regions.as_struct(DigOc.regions!)
   end
+
+  @doc """
+  Like `regions/0` but raises DigitalOceanError.
+  """
+  @spec regions! :: DigitalOcean.Regions.t
+  def regions!(), do: regions |> raise_error_or_return
+    
 
   
   @doc """
   Requests the list of sizes from the server.
   """
-  @spec sizes :: DigitalOcean.Sizes.t
+  @spec sizes :: {:ok, DigitalOcean.Sizes.t} | {:error, map}
   def sizes do
     DigitalOcean.Sizes.as_struct(DigOc.sizes!)
   end
 
+  @doc """
+  Like `sizes/0` but raises DigitalOceanError.
+  """
+  @spec sizes! :: DigitalOcean.Sizes.t
+  def sizes!(), do: sizes |> raise_error_or_return
+  
 
+  def get_next_page(url, type) do
+    apply(type, :as_struct, [DigOc.page!(url)]) |> raise_error_or_return
+  end
+      
+    
   defp actions_per_page do
     Application.get_env(:digital_ocean, :actions_per_page, @per_page)
+  end
+
+  defp raise_error_or_return(res) do
+    case res do
+      {:ok, struct} -> struct
+      {:error, map} -> raise(DigitalOceanError, map)
+    end
   end
   
 end

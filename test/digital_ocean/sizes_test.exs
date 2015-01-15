@@ -31,7 +31,7 @@ defmodule DigitalOcean.SizesTest do
   end
 
   test "strut and embedded structs created", %{ fixtures: sizes } do
-    s = DigitalOcean.Sizes.as_struct(sizes)
+    {:ok, s} = DigitalOcean.Sizes.as_struct(sizes)
     assert length(s.sizes) == s.meta[:total]
     size = hd(s.sizes)
     assert size.__struct__ == DigitalOcean.Sizes.Size
@@ -39,7 +39,7 @@ defmodule DigitalOcean.SizesTest do
   end
 
   test "sizes as enumeration", %{ fixtures: sizes } do
-    s = DigitalOcean.Sizes.as_struct(sizes)
+    {:ok, s} = DigitalOcean.Sizes.as_struct(sizes)
     assert Enum.count(s) == s.meta[:total]
     assert Enum.member?(s, "512mb")
     refute Enum.member?(s, "xyzzy")
@@ -47,14 +47,15 @@ defmodule DigitalOcean.SizesTest do
   end
 
   test "sizes as an iteration", %{ fixtures: sizes } do
-    s = DigitalOcean.Sizes.as_struct(sizes)
+    {:ok, s} = DigitalOcean.Sizes.as_struct(sizes)
     res = for _ <- s, do: :ok
     assert res == List.duplicate(:ok, Enum.count(s))
   end
 
   @tag :external
   test "retrieve and process sizes" do
-    s = DigitalOcean.sizes
+    s = DigitalOcean.sizes!
+    {:ok, ^s} = DigitalOcean.sizes
     res = for _ <- s, do: :ok
     assert res == List.duplicate(:ok, Enum.count(s))
   end

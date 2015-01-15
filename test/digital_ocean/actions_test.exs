@@ -28,7 +28,7 @@ defmodule DigitalOcean.ActionsTest do
   end
 
   test "struct and embedded structs created", %{ fixtures: actions } do
-    s = DigitalOcean.Actions.as_struct(actions)
+    {:ok, s} = DigitalOcean.Actions.as_struct(actions)
     assert length(s.actions) == 3
     action = hd(s.actions)
     assert action.__struct__ == DigitalOcean.Actions.Action
@@ -36,13 +36,13 @@ defmodule DigitalOcean.ActionsTest do
   end
 
   test "actions as an enumeration", %{ fixtures: actions } do
-    s = DigitalOcean.Actions.as_struct(actions)
+    {:ok, s} = DigitalOcean.Actions.as_struct(actions)
     assert Enum.member?(s, 41152505)
   end
   
   test "actions as a limited iteration", %{ fixtures: actions } do
     Application.put_env(:digital_ocean, :use_api_paging, false)
-    s = DigitalOcean.Actions.as_struct(actions)
+    {:ok, s} = DigitalOcean.Actions.as_struct(actions)
     res = for _ <- s, do: :ok
     assert res == List.duplicate(:ok, length(s[:actions]))
     assert res == List.duplicate(:ok, Enum.count(s))
@@ -55,7 +55,8 @@ defmodule DigitalOcean.ActionsTest do
   test "retrieve and process actions, no paging" do
     Application.put_env(:digital_ocean, :use_api_paging, false)
     Application.put_env(:digital_ocean, :actions_per_page, 101)
-    s = DigitalOcean.actions
+    s = DigitalOcean.actions!
+    {:ok, ^s} = DigitalOcean.actions
     assert Enum.count(s) == 101
     a = hd(s.actions)
     assert a.__struct__ == DigitalOcean.Actions.Action
@@ -65,7 +66,7 @@ defmodule DigitalOcean.ActionsTest do
   test "retrieve and process actions, with paging" do
     Application.put_env(:digital_ocean, :use_api_paging, true)
     Application.put_env(:digital_ocean, :actions_per_page, 200)
-    s = DigitalOcean.actions
+    s = DigitalOcean.actions!
     assert Enum.count(s) == s.meta.total
     a = hd(s.actions)
     assert a.__struct__ == DigitalOcean.Actions.Action
@@ -77,7 +78,7 @@ defmodule DigitalOcean.ActionsTest do
   @tag :external
   test "retrieve a single valid action" do
     Application.put_env(:digital_ocean, :use_api_paging, false)
-    id = hd(DigitalOcean.actions(1).actions)[:id]
+    id = hd(DigitalOcean.actions!(1).actions)[:id]
     assert {:ok, res} = DigitalOcean.action(id)
     assert res[:id] == id
     assert ^res = DigitalOcean.action!(id)

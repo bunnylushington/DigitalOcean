@@ -33,6 +33,12 @@ defmodule DigitalOcean.Actions do
   
   Macros.define_as_struct(:actions, DigitalOcean.Actions.Action)
   Macros.implement_enumerable(:actions, DigitalOcean.Actions)
-  def get_next_page(url), do: as_struct(DigOc.page!(url))
+
+  def get_next_page(url) do
+    case as_struct(DigOc.page!(url)) do
+      {:ok, s} -> s
+      {:error, e} -> raise DigitalOceanError, e
+    end
+  end
   
 end

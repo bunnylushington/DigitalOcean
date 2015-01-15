@@ -24,7 +24,7 @@ defmodule DigitalOcean.RegionsTest do
   end
 
   test "struct and embedded structs created", %{ fixtures: regions } do
-    s = DigitalOcean.Regions.as_struct(regions)
+    {:ok, s} = DigitalOcean.Regions.as_struct(regions)
     assert length(s.regions) == s.meta[:total]
     region = hd(s.regions)
     assert region.__struct__ == DigitalOcean.Regions.Region
@@ -32,7 +32,7 @@ defmodule DigitalOcean.RegionsTest do
   end
 
   test "regions as enumeration", %{ fixtures: regions } do
-    s = DigitalOcean.Regions.as_struct(regions)
+    {:ok, s} = DigitalOcean.Regions.as_struct(regions)
     assert Enum.count(s) == s.meta[:total]
     assert Enum.member?(s, "nyc1")
     refute Enum.member?(s, "xyzzy")
@@ -41,10 +41,18 @@ defmodule DigitalOcean.RegionsTest do
 
   @tag :external
   test "retrieve and process regions" do
-    s = DigitalOcean.regions
+    s = DigitalOcean.regions!
+    {:ok, ^s} = DigitalOcean.regions
     res = for _ <- s, do: :ok
     assert res == List.duplicate(:ok, Enum.count(s))
   end
-  
+
+  @tag :external
+  test "retrieve regions without token set" do
+    token = System.get_env("DIGOC_API2_TOKEN")
+    System.put_env("DIGOC_API2_TOKEN", "xyzzy")
+    assert_raise DigitalOceanError, fn -> DigitalOcean.regions! end
+    System.put_env("DIGOC_API2_TOKEN", token)
+  end
   
 end

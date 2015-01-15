@@ -13,10 +13,14 @@ defmodule DigitalOcean.Account do
                          email_verified: boolean }
 
   def as_struct(data) do
-    %__MODULE__{droplet_limit:  data.account.droplet_limit,
-                email:          data.account.email,
-                uuid:           data.account.uuid,
-                email_verified: data.account.email_verified}
+    if DigitalOcean.Util.error?(data, :uukd) do
+      {:error, data}
+    else
+      {:ok, %__MODULE__{droplet_limit:  data.account.droplet_limit,
+                        email:          data.account.email,
+                        uuid:           data.account.uuid,
+                        email_verified: data.account.email_verified}}
+    end
   end
   
 end

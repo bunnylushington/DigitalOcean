@@ -7,7 +7,7 @@ defmodule DigitalOcean.AccountTest do
   end
   
   test "account struct created from fixture", %{ fixtures: account } do
-    s = DigitalOcean.Account.as_struct(account)
+    {:ok, s} = DigitalOcean.Account.as_struct(account)
     assert s.droplet_limit == 25
     assert s.email == "quuxor@example.com"
     assert s.uuid == "cdbdbsabzb"
@@ -16,7 +16,8 @@ defmodule DigitalOcean.AccountTest do
 
   @tag :external
   test "retrieve and populate account" do
-    s = DigitalOcean.account
+    s = DigitalOcean.account!
+    {:ok, ^s} = DigitalOcean.account
     assert is_integer(s.droplet_limit)
     assert is_binary(s.email)
     assert is_binary(s.uuid)
