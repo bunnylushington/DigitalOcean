@@ -10,7 +10,7 @@ defmodule DigitalOcean do
   @type slug :: String.t
 
 
-  
+  # ------------------------------------------------------- ACCOUNT.
   @doc """
   Requests the account information associated with the current user.
   """
@@ -26,7 +26,7 @@ defmodule DigitalOcean do
   def account!(), do: account |> raise_error_or_return
     
     
-    
+  # ------------------------------------------------------- ACTIONS.    
   @doc """ 
   Requests actions associated with the account.  
 
@@ -71,8 +71,6 @@ defmodule DigitalOcean do
     actions(per_page) |> raise_error_or_return
   end
   
-
-
   @doc """
   Requests a specific action from the server.
   """
@@ -90,7 +88,8 @@ defmodule DigitalOcean do
   def action!(id), do: action(id) |> raise_error_or_return
 
 
-
+    
+  # ------------------------------------------------------- SSH KEYS.
   @doc """
   Requests the list of SSH keys from the server.  
   """
@@ -123,7 +122,7 @@ defmodule DigitalOcean do
   def key!(id), do: key(id) |> raise_error_or_return
 
 
-  
+  # ------------------------------------------------------- REGIONS.    
   @doc """
   Requests the list of regions from the server.
   """
@@ -139,7 +138,7 @@ defmodule DigitalOcean do
   def regions!(), do: regions |> raise_error_or_return
     
 
-  
+  # ------------------------------------------------------- SIZES.
   @doc """
   Requests the list of sizes from the server.
   """
@@ -153,7 +152,9 @@ defmodule DigitalOcean do
   """
   @spec sizes! :: DigitalOcean.Sizes.t
   def sizes!(), do: sizes |> raise_error_or_return
-  
+
+
+    
 
   def get_next_page(url, type) do
     apply(type, :as_struct, [DigOc.page!(url)]) |> raise_error_or_return
