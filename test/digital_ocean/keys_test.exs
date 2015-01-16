@@ -30,6 +30,14 @@ defmodule DigitalOcean.KeysTest do
   test "keys as enumeration", %{ fixtures: keys } do
     {:ok, s} = DigitalOcean.Keys.as_struct(keys)
     assert Enum.count(s) == s.meta[:total]
+    assert Enum.member?(s, "keyone")
+    refute Enum.member?(s, "keysix")
+  end
+
+  test "as an iteration", %{ fixtures: keys } do
+    {:ok, s} = DigitalOcean.Keys.as_struct(keys)
+    res = for _ <- s, do: :ok
+    assert res == List.duplicate(:ok, Enum.count(s))
   end
 
 end

@@ -31,8 +31,8 @@ defmodule DigitalOcean.Macros do
   implementing the protocol.  
 
   When member?/2 is defined a heuristic is employed whereby membership
-  is determined by comparing with the :slug key of the item if the
-  argument is a string and :id if it is an integer.
+  is determined by comparing with the :slug and :name key of the item
+  if the argument is a string and :id if it is an integer.
   """
   defmacro implement_enumerable(key, type) do
     quote do
@@ -46,13 +46,14 @@ defmodule DigitalOcean.Macros do
           end
         end
         
-        
         def member?(c, v) when is_integer(v) do
-          {:ok, Enum.any?(c[unquote(key)], fn(x) -> x.id == v end) }
+          {:ok, Enum.any?(c[unquote(key)], &(&1.id == v))}
         end
         
         def member?(c, v) when is_binary(v) do
-          {:ok, Enum.any?(c[unquote(key)], fn(x) -> x.slug == v end) }
+          test = fn(x) -> (Map.has_key?(x, :slug) && x.slug == v) ||
+                          (Map.has_key?(x, :name) && x.name == v) end
+          {:ok, Enum.any?(c[unquote(key)], test)}
         end
 
         
