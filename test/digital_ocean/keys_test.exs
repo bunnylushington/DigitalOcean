@@ -40,4 +40,13 @@ defmodule DigitalOcean.KeysTest do
     assert res == List.duplicate(:ok, Enum.count(s))
   end
 
+  @tag :external
+  test "retrieve keys" do
+    s = DigitalOcean.keys!
+    assert {:ok, ^s} = DigitalOcean.keys
+    assert Enum.count(s) == length(s[:ssh_keys])
+  end
+    
+    
+
 end

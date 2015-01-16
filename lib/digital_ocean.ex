@@ -92,7 +92,23 @@ defmodule DigitalOcean do
   """
   @spec action!(integer) :: DigitalOcean.Actions.Action.t
   def action!(id), do: action(id) |> raise_error_or_return
-  
+
+
+
+  @doc """
+  Requests the list of SSH keys from the server.  
+  """
+  @spec keys :: {:ok, DigitalOcean.Keys.t} | {:error, map}
+  def keys do
+    DigitalOcean.Keys.as_struct(DigOc.keys!)
+  end
+
+  @doc """
+  Like `keys/0` but raises DigitalOceanError.
+  """
+  @spec keys! :: DigitalOcean.Keys.t
+  def keys!(), do: keys |> raise_error_or_return
+    
 
   
   @doc """
