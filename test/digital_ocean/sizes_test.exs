@@ -30,7 +30,7 @@ defmodule DigitalOcean.SizesTest do
     assert s.links == %{}
   end
 
-  test "strut and embedded structs created", %{ fixtures: sizes } do
+  test "struct and embedded structs created", %{ fixtures: sizes } do
     {:ok, s} = DigitalOcean.Sizes.as_struct(sizes)
     assert length(s.sizes) == s.meta[:total]
     size = hd(s.sizes)
