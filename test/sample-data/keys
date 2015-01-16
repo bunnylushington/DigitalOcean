@@ -1,0 +1,7 @@
+%{links: %{}, meta: %{total: 2},
+  ssh_keys: [%{fingerprint: "16:93:36:e5:f2:b4:d0:22:01:fc:40:7e:6c:02:95:b1",
+     id: 79152, name: "keyone",
+     public_key: "ssh-rsa AAAA quuxor@example.com"},
+   %{fingerprint: "c3:63:20:2f:b0:2b:0b:0a:48:2a:e5:2a:f2:dc:34:1b", id: 164439,
+     name: "montuori",
+     public_key: "ssh-rsa AB3Nza bogys@example.com"}]}
