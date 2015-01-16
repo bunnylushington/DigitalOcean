@@ -46,7 +46,21 @@ defmodule DigitalOcean.KeysTest do
     assert {:ok, ^s} = DigitalOcean.keys
     assert Enum.count(s) == length(s[:ssh_keys])
   end
-    
+
+  @tag :external
+  test "retrieve a single valid key" do
+    key = hd(DigitalOcean.keys![:ssh_keys])
+    #IO.puts inspect key.fingerprint
+    assert ^key = DigitalOcean.key!(key.id)
+    assert ^key = DigitalOcean.key!(key.fingerprint)
+    assert {:ok, ^key} = DigitalOcean.key(key.id)
+  end
+
+  @tag :external
+  test "retrieve a single invalid key" do
+    assert {:error, _} = DigitalOcean.key(1)
+    assert_raise DigitalOceanError, fn -> DigitalOcean.action!(1) end
+  end
     
 
 end

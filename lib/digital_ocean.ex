@@ -79,14 +79,10 @@ defmodule DigitalOcean do
   @spec action(integer) :: ({:ok, DigitalOcean.Actions.Action.t} |
                             {:error, map})
   def action(id) do
-    a = DigOc.action!(id)
-    if DigitalOcean.Util.error?(a, :action) do
-      {:error, a}
-    else
-      {:ok, struct(DigitalOcean.Actions.Action, a.action)}
-    end
+    DigOc.action!(id)
+    |> raise_error_or_return_singleton(:action, DigitalOcean.Actions.Action)
   end
-  
+
   @doc """
   Like `action/1` but raises DigitalOceanException.
   """
@@ -108,7 +104,24 @@ defmodule DigitalOcean do
   """
   @spec keys! :: DigitalOcean.Keys.t
   def keys!(), do: keys |> raise_error_or_return
-    
+
+  @doc """
+  Request one SSH key from the server.
+
+  The parameter may be the key's id or fingerprint.
+  """
+  @spec key(integer | String.t) :: DigitalOcean.Keys.Key.t
+  def key(id) do
+    DigOc.key!(id)
+    |> raise_error_or_return_singleton(:ssh_key, DigitalOcean.Keys.Key)
+  end
+
+  @doc """
+  Like `key/1` but raises DigitalOceanError.
+  """
+  @spec key!(integer | String.t) :: DigitalOcean.Keys.Key.t
+  def key!(id), do: key(id) |> raise_error_or_return
+
 
   
   @doc """
@@ -146,7 +159,7 @@ defmodule DigitalOcean do
     apply(type, :as_struct, [DigOc.page!(url)]) |> raise_error_or_return
   end
       
-    
+
   defp actions_per_page do
     Application.get_env(:digital_ocean, :actions_per_page, @per_page)
   end
@@ -157,5 +170,13 @@ defmodule DigitalOcean do
       {:error, map} -> raise(DigitalOceanError, map)
     end
   end
-  
+
+  defp raise_error_or_return_singleton(result, key, type) do
+    if DigitalOcean.Util.error?(result, key) do
+      {:error, result}
+    else
+      {:ok, struct(type, result[key])}
+    end
+  end
+
 end
