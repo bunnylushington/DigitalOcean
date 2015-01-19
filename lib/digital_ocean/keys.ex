@@ -10,9 +10,9 @@ defmodule DigitalOcean.Keys do
   
   @derive [Access]
   require DigitalOcean.Macros, as: Macros
-  import DigitalOcean, only: [error_or_singleton: 3,
-                              expect_no_content: 1,
-                              raise_error_or_return: 1]
+  import DigitalOcean.Util, only: [error_or_singleton: 3,
+                                   expect_no_content: 1,
+                                   raise_error_or_return: 1]
 
   defstruct(ssh_keys: [], links: %{}, meta: %{})
   @type t :: %__MODULE__{ssh_keys: [DigitalOcean.Keys.Key.t],

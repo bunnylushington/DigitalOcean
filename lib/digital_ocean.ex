@@ -1,7 +1,10 @@
 defmodule DigitalOcean do
 
+  import DigitalOcean.Util, only: [get_next_page: 2,
+                                   expect_no_content: 1,
+                                   error_or_singleton: 3,
+                                   raise_error_or_return: 1]
   @per_page 100
-  @no_content "204 No Content"
   
   @type page :: %{(:first | :last | :prev | :next) => String.t}
   @type pages :: %{} | %{:pages => page}
@@ -156,42 +159,11 @@ defmodule DigitalOcean do
 
 
     
-
-  def get_next_page(url, type) do
-    apply(type, :as_struct, [DigOc.page!(url)]) |> raise_error_or_return
-  end
       
 
   defp actions_per_page do
     Application.get_env(:digital_ocean, :actions_per_page, @per_page)
   end
 
-  def raise_error_or_return(res) do
-    case res do
-      {:ok, struct} -> struct
-      {:error, map} -> raise(DigitalOceanError, map)
-    end
-  end
-
-  def expect_no_content({:ok, body, headers}) do
-    if headers["Status"] == @no_content do
-      :ok
-    else
-      {:error, body}
-    end
-  end
-  def expect_no_content(_) do
-    {:error, %{ id: "Undefined Error",
-                message: "Cannot determine cause of error." }}
-  end
-    
-  
-  def error_or_singleton(result, key, type) do
-    if DigitalOcean.Util.error?(result, key) do
-      {:error, result}
-    else
-      {:ok, struct(type, result[key])}
-    end
-  end
 
 end
