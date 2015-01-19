@@ -67,10 +67,16 @@ defmodule DigitalOcean.KeysTest do
   test "create, update, and delete a new key", %{ pubkey: pubkey } do
     newkey = DigitalOcean.Keys.create!("newkey", {:file, pubkey})
     assert newkey.__struct__ == DigitalOcean.Keys.Key
+    assert_raise DigitalOceanError, fn ->
+      DigitalOcean.Keys.create!("newkey-2", {:file, pubkey}) end
     updated_key = DigitalOcean.Keys.update!(newkey.id, "renamed-key")
     assert updated_key.id == newkey.id
     assert updated_key.name == "renamed-key"
     assert :ok = DigitalOcean.Keys.destroy(newkey.id)
+    assert_raise DigitalOceanError, fn ->
+      DigitalOcean.Keys.destroy!(newkey.id) end
+    assert_raise DigitalOceanError, fn ->
+      DigitalOcean.Keys.update!(newkey.id, "some name here") end
   end
 
 end
