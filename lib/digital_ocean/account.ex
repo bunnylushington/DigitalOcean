@@ -1,5 +1,21 @@
 defmodule DigitalOcean.Account do
+  @moduledoc """
+  Digital Ocean Account Struct
 
+  Its fields are:
+
+    * `droplet_limit` [integer] - total droplets user may have
+
+    * `email` [string] - registered email address
+ 
+    * `uuid` [string] - universal id for this user
+
+    * `email_verified` [boolean] - if true, user has verified email address
+
+  See the [Digital Ocean Account
+  documentation](https://developers.digitalocean.com/#account) for
+  further details.
+  """
   @derive [Access]
 
   defstruct(droplet_limit:  nil,
