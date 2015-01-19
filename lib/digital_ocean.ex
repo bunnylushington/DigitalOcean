@@ -1,7 +1,8 @@
 defmodule DigitalOcean do
 
   @per_page 100
-
+  @no_content "204 No Content"
+  
   @type page :: %{(:first | :last | :prev | :next) => String.t}
   @type pages :: %{} | %{:pages => page}
   @type links :: %{:links => pages}
@@ -78,7 +79,7 @@ defmodule DigitalOcean do
                             {:error, map})
   def action(id) do
     DigOc.action!(id)
-    |> raise_error_or_return_singleton(:action, DigitalOcean.Actions.Action)
+    |> error_or_singleton(:action, DigitalOcean.Actions.Action)
   end
 
   @doc """
@@ -109,10 +110,10 @@ defmodule DigitalOcean do
 
   The parameter may be the key's id or fingerprint.
   """
-  @spec key(integer | String.t) :: DigitalOcean.Keys.Key.t
+  @spec key(integer | String.t) :: ({:ok, DigitalOcean.Keys.Key.t} |
+                                    {:error, map})
   def key(id) do
-    DigOc.key!(id)
-    |> raise_error_or_return_singleton(:ssh_key, DigitalOcean.Keys.Key)
+    DigOc.key!(id) |> error_or_singleton(:ssh_key, DigitalOcean.Keys.Key)
   end
 
   @doc """
@@ -165,14 +166,27 @@ defmodule DigitalOcean do
     Application.get_env(:digital_ocean, :actions_per_page, @per_page)
   end
 
-  defp raise_error_or_return(res) do
+  def raise_error_or_return(res) do
     case res do
       {:ok, struct} -> struct
       {:error, map} -> raise(DigitalOceanError, map)
     end
   end
 
-  defp raise_error_or_return_singleton(result, key, type) do
+  def expect_no_content({:ok, body, headers}) do
+    if headers["Status"] == @no_content do
+      :ok
+    else
+      {:error, body}
+    end
+  end
+  def expect_no_content(_) do
+    {:error, %{ id: "Undefined Error",
+                message: "Cannot determine cause of error." }}
+  end
+    
+  
+  def error_or_singleton(result, key, type) do
     if DigitalOcean.Util.error?(result, key) do
       {:error, result}
     else

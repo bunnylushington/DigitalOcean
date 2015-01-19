@@ -3,7 +3,8 @@ defmodule DigitalOcean.KeysTest do
 
   setup do
     {key_data, _} = Code.eval_file("test/sample-data/keys", System.cwd)
-    {:ok, fixtures: key_data}
+    pubkey = Path.join(System.cwd, "test/sample-data/public-key")
+    {:ok, fixtures: key_data, pubkey: pubkey}
   end
 
   test "key struct created from fixture", %{ fixtures: keys } do
@@ -61,6 +62,15 @@ defmodule DigitalOcean.KeysTest do
     assert {:error, _} = DigitalOcean.key(1)
     assert_raise DigitalOceanError, fn -> DigitalOcean.action!(1) end
   end
-    
+
+  @tag :external
+  test "create, update, and delete a new key", %{ pubkey: pubkey } do
+    newkey = DigitalOcean.Keys.create!("newkey", {:file, pubkey})
+    assert newkey.__struct__ == DigitalOcean.Keys.Key
+    updated_key = DigitalOcean.Keys.update!(newkey.id, "renamed-key")
+    assert updated_key.id == newkey.id
+    assert updated_key.name == "renamed-key"
+    assert :ok = DigitalOcean.Keys.destroy(newkey.id)
+  end
 
 end
