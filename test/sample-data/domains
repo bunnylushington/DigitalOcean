@@ -1,0 +1,3 @@
+%{domains: [%{name: "example.com", ttl: 1800,
+     zone_file: "$ORIGIN example.com.\n$TTL 1800\nexample.com. IN SOA ns1.digitalocean.com. hostmaster.example.com. 1420911062 10800 3600 604800 1800\nexample.com. 1800 IN NS ns1.digitalocean.com.\nexample.com. 1800 IN NS ns2.digitalocean.com.\nexample.com. 1800 IN NS ns3.digitalocean.com.\nexample.com. 1800 IN A 10.0.0.1\ntest.example.com.example.com. 1800 IN A 10.0.0.2\n"}],
+  links: %{}, meta: %{total: 1}}
