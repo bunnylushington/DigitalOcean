@@ -27,6 +27,7 @@ defmodule DigitalOcean.Macros do
     end
   end
 
+
   @doc """ 
   Aids in implementing the Enumerable protocol.
 
@@ -72,7 +73,7 @@ defmodule DigitalOcean.Macros do
           if (Map.has_key?(c.links, :pages)
               && Map.has_key?(c.links.pages, :next)
               && Application.get_env(:digital_ocean, :use_api_paging, false)) do
-            c = apply(DigitalOcean, :get_next_page,
+            c = apply(DigitalOcean.Util, :get_next_page,
                       [c.links.pages.next, unquote(type)])
             reduce(c, {:cont, acc}, fun)
           else
