@@ -1,6 +1,6 @@
 defmodule DigitalOcean.KeysTest do
   use ExUnit.Case
-
+ 
   setup do
     {key_data, _} = Code.eval_file("test/sample-data/keys", System.cwd)
     pubkey = Path.join(System.cwd, "test/sample-data/public-key")
