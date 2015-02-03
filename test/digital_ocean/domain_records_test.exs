@@ -49,5 +49,27 @@ defmodule DigitalOcean.DomainRecordsTest do
     assert record[:type] == "NS"
     assert ^record = DigitalOcean.domain_record!("bapi.us", record[:id])
   end
+
+  @tag :external
+  test "create, update, and delete single record" do
+    rec = %DigitalOcean.DomainRecords.Record{type: "A",
+                                             name: "quux.bapi.us",
+                                             data: "192.168.1.1"}
+    res = DigitalOcean.DomainRecords.create!("bapi.us", rec)
+    id = res.id
+    assert res.type == "A"
+    assert res.name == "quux.bapi.us"
+    assert res.data == "192.168.1.1"
+
+    res = DigitalOcean.DomainRecords.update!("bapi.us", id, "quuxor.bapi.us")
+    assert res.id == id
+    assert res.name == "quuxor.bapi.us"
+
+    lookup = DigitalOcean.domain_record!("bapi.us", id)
+    assert res == lookup
+
+    assert :ok == DigitalOcean.DomainRecords.destroy!("bapi.us", lookup)
+    
+  end
   
 end

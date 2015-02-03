@@ -38,6 +38,7 @@ defmodule DigitalOcean.Util do
   """
   def raise_error_or_return(res) do
     case res do
+      :ok -> :ok               
       {:ok, struct} -> struct
       {:error, map} -> raise(DigitalOceanError, map)
     end
