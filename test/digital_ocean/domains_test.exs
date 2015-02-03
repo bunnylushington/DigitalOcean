@@ -48,5 +48,19 @@ defmodule DigitalOcean.DomainsTest do
     assert ^domain = DigitalOcean.domain!(domain.name)
   end
 
+  @tag :external
+  test "create and delete domain" do
+    ip = "127.0.0.1"
+    s = DigitalOcean.domains!
+    old_domain = Enum.fetch!(s, 0).name
+    new_domain = "domains_test." <> old_domain
+    domain = DigitalOcean.Domains.create!(new_domain, ip)
+    assert domain.name == new_domain
+    assert {:error, _} = DigitalOcean.Domains.create(new_domain, ip)
+    assert :ok = DigitalOcean.Domains.destroy(new_domain)
+    assert_raise DigitalOceanError,
+      fn -> DigitalOcean.Domains.destroy!(new_domain) end
+  end
+
   
 end
