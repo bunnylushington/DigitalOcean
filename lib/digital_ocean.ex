@@ -187,9 +187,7 @@ defmodule DigitalOcean do
   def sizes!(), do: sizes |> raise_error_or_return
 
 
-    
-      
-
+  # ------------------------------------------------------- PRIVATE.
   defp actions_per_page do
     Application.get_env(:digital_ocean, :actions_per_page, @per_page)
   end
