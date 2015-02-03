@@ -1,0 +1,10 @@
+%{domain_records: [%{data: "ns1.digitalocean.com", id: 3833164, name: "@",
+     port: nil, priority: nil, type: "NS", weight: nil},
+   %{data: "ns2.digitalocean.com", id: 3833165, name: "@", port: nil,
+     priority: nil, type: "NS", weight: nil},
+   %{data: "ns3.digitalocean.com", id: 3833166, name: "@", port: nil,
+     priority: nil, type: "NS", weight: nil},
+   %{data: "10.0.0.1", id: 3833167, name: "@", port: nil, priority: nil,
+     type: "A", weight: nil},
+   %{data: "10.0.0.2", id: 3833326, name: "test.example.com", port: nil,
+     priority: nil, type: "A", weight: nil}], links: %{}, meta: %{total: 5}}
