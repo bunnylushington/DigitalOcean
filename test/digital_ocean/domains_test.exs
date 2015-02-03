@@ -43,8 +43,9 @@ defmodule DigitalOcean.DomainsTest do
   @tag :external
   test "retrieve list of domains" do
     s = DigitalOcean.domains!
-    {:ok, ^s} = DigitalOcean.domains
-    IO.puts "s is #{ inspect s }"
+    assert {:ok, ^s} = DigitalOcean.domains
+    domain = Enum.fetch!(s, 0)
+    assert ^domain = DigitalOcean.domain!(domain.name)
   end
 
   

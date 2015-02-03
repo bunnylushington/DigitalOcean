@@ -106,6 +106,21 @@ defmodule DigitalOcean do
   @spec domains! :: DigitalOcean.Domains.t
   def domains!(), do: domains |> raise_error_or_return
 
+  @doc """
+  Request a specific domain by domain name.
+  """
+  @spec domain(String.t) :: {:ok, DigitalOcean.Domains.Domain.t} | {:error, map}
+  def domain(name) do
+    DigOc.domain!(name) |> error_or_singleton(:domain,
+                                              DigitalOcean.Domains.Domain)
+  end
+
+  @doc """
+  Like `doamin/1` but raises DigitalOceanError.
+  """
+  @spec domain(String.t) :: DigitalOcean.Domains.Domain.t
+  def domain!(name), do: domain(name) |> raise_error_or_return
+
     
   # ------------------------------------------------------- SSH KEYS.
   @doc """
