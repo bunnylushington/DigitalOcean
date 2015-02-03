@@ -42,11 +42,12 @@ defmodule DigitalOcean.DomainRecordsTest do
   end
 
   @tag :external
-  test "retrieve list of records" do
+  test "retrieve list of records, single record" do
     s = DigitalOcean.domain_records!("bapi.us")
     assert {:ok, ^s} = DigitalOcean.domain_records("bapi.us")
     record = Enum.fetch!(s, 0)
     assert record[:type] == "NS"
+    assert ^record = DigitalOcean.domain_record!("bapi.us", record[:id])
   end
   
 end

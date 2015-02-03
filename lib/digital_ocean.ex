@@ -126,6 +126,8 @@ defmodule DigitalOcean do
   @doc """
   Requests the list of domain records for a domain.
   """
+  @spec domain_records(String.t) :: {:ok, DigitalOcean.DomainRecords.t} |
+                                    {:error, map}
   def domain_records(domain) do
     DigitalOcean.DomainRecords.as_struct(DigOc.Domain.records!(domain))
   end
@@ -133,10 +135,28 @@ defmodule DigitalOcean do
   @doc """
   Like `domain_records/1` but raises DigitalOceanError.
   """
+  @spec domain_records(Stirng.t) :: DigitalOcean.DomainRecords.t
   def domain_records!(domain) do
     domain_records(domain) |> raise_error_or_return
   end
-    
+
+  @doc """
+  Requests a specific domain record in a domain.
+  """
+  @spec domain_record(String.t, integer) :: DigitalOcean.DomainRecords.Record.t
+  def domain_record(domain, id) do
+    DigOc.Domain.record!(domain, id)
+    |> error_or_singleton(:domain_record, DigitalOcean.DomainRecords.Record)
+  end
+
+  @doc """
+  Like `domain_record/2` but raises DigitalOceanError.
+  """
+  def domain_record!(domain, id) do
+    domain_record(domain, id) |> raise_error_or_return
+  end
+
+  
   # ------------------------------------------------------- SSH KEYS.
   @doc """
   Requests the list of SSH keys from the server.  
