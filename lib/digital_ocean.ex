@@ -121,6 +121,15 @@ defmodule DigitalOcean do
   @spec domain(String.t) :: DigitalOcean.Domains.Domain.t
   def domain!(name), do: domain(name) |> raise_error_or_return
 
+
+  # ------------------------------------------------------- DOMAIN RECORDS.
+  @doc """
+  Requests the list of domain records for a domain.
+  """
+  def domain_records(domain) do
+    DigitalOcean.DomainRecords.as_struct(DigOc.domain_records!(domain))
+  end
+    
     
   # ------------------------------------------------------- SSH KEYS.
   @doc """
