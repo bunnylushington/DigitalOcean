@@ -39,7 +39,13 @@ defmodule DigitalOcean.DomainsTest do
     res = for _ <- s, do: :ok
     assert res == List.duplicate(:ok, Enum.count(s))
   end
-  
+
+  @tag :external
+  test "retrieve list of domains" do
+    s = DigitalOcean.domains!
+    {:ok, ^s} = DigitalOcean.domains
+    IO.puts "s is #{ inspect s }"
+  end
 
   
 end

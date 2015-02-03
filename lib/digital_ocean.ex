@@ -91,6 +91,20 @@ defmodule DigitalOcean do
   @spec action!(integer) :: DigitalOcean.Actions.Action.t
   def action!(id), do: action(id) |> raise_error_or_return
 
+  # ------------------------------------------------------- DOMAINS.
+  @doc """
+  Requests the list of Domains from the server.
+  """
+  @spec domains :: {:ok, DigitalOcean.Domains.t} | {:error, map}
+  def domains do
+    DigitalOcean.Domains.as_struct(DigOc.domains!)
+  end
+
+  @doc """
+  Like `domains/0` but raises DigitalOceanError.
+  """
+  @spec domains! :: DigitalOcean.Domains.t
+  def domains!(), do: domains |> raise_error_or_return
 
     
   # ------------------------------------------------------- SSH KEYS.
