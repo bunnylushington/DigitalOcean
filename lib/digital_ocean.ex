@@ -127,9 +127,15 @@ defmodule DigitalOcean do
   Requests the list of domain records for a domain.
   """
   def domain_records(domain) do
-    DigitalOcean.DomainRecords.as_struct(DigOc.domain_records!(domain))
+    DigitalOcean.DomainRecords.as_struct(DigOc.Domain.records!(domain))
   end
-    
+
+  @doc """
+  Like `domain_records/1` but raises DigitalOceanError.
+  """
+  def domain_records!(domain) do
+    domain_records(domain) |> raise_error_or_return
+  end
     
   # ------------------------------------------------------- SSH KEYS.
   @doc """
