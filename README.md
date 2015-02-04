@@ -6,6 +6,10 @@ This is the (very!) beginning of a Digital Ocean API wrapper that operates at a 
 
 This is a work in progress!  (But if you have ideas, be sure to let me know.)
 
+## Not Yet Implemented ##
+
+All of the Droplet and Droplet Actions section; delete and update image; all of the Image Actions section.
+
 ## Copyright ##
 
 This library is (c) 2015 BAPI Consulting and released under the MIT License.
