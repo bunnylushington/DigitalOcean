@@ -7,7 +7,7 @@ defmodule DigitalOcean.Domains do
                                    raise_error_or_return: 1]
 
   defstruct(domains: [], links: %{}, meta: %{})
-  @type t :: %__MODULE__{domains: [DigitalOcean.Domains.Domain],
+  @type t :: %__MODULE__{domains: [DigitalOcean.Domains.Domain.t],
                          links: DigitalOcean.links,
                          meta: DigitalOcean.meta}
 
