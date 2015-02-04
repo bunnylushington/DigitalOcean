@@ -9,7 +9,7 @@ defmodule DigitalOcean.Droplets do
                          links: DigitalOcean.links,
                          meta: DigitalOcean.meta}
 
-  #  Macros.define_as_struct(:droplets, DigitalOcean.Droplets.Droplet)
+  Macros.define_as_struct(:droplets, DigitalOcean.Droplets.Droplet)
   Macros.implement_enumerable(:droplets, DigitalOcean.Droplets)
 
   
@@ -76,8 +76,17 @@ defmodule DigitalOcean.Droplets do
               kernel: nil)
 
     def as_struct(data) do
-      struct(__MODULE__, data)
+      kernel = DigitalOcean.Kernels.Kernel.as_struct(data.kernel)
+      nets = DigitalOcean.Networks.as_struct(data.networks)
+      region = struct(DigitalOcean.Regions.Region, data.region)
+      image = struct(DigitalOcean.Images.Image, data.image)
+      struct(__MODULE__, %{ data |
+                            image: image,
+                            region: region,
+                            kernel: kernel,
+                            networks: nets })
     end
+
   end
               
   

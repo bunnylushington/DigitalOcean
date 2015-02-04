@@ -20,7 +20,10 @@ defmodule DigitalOcean.Macros do
       end
     end
   end
-  
+
+  @doc """
+  Implementation of `define_as_struct/2`.
+  """
   def as_struct(data, key, type, module) do
     if DigitalOcean.Util.error?(data, key) do
       {:error, data}
@@ -29,7 +32,7 @@ defmodule DigitalOcean.Macros do
       list = Enum.map(s[key],
         fn(x) ->
           if as_struct_implemented(type) do
-            type.as_struct(data)
+            type.as_struct(x)
           else
             struct(type, x)
           end
@@ -37,7 +40,10 @@ defmodule DigitalOcean.Macros do
       {:ok, Map.put(s, key, list)}
     end
   end
-  
+
+  @doc """
+  Returns true if the module.as_struct/1 is defined, false otherwise.
+  """
   def as_struct_implemented(module) do
     apply(module, :__info__, [:functions]) |> Keyword.get(:as_struct) == 1
   end
