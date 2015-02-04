@@ -5,7 +5,7 @@ defmodule DigitalOcean.Networks do
   @type t :: %__MODULE__{v4: [DigitalOcean.Networks.Network.t],
                          v6: [DigitalOcean.Networks.Network.t]}
 
-  def to_struct(data) do
+  def as_struct(data) do
     struct(__MODULE__,
            Enum.map(data,
              fn({k, v}) -> {k, Enum.map(v, fn(x) -> network(x) end)} end))

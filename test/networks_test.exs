@@ -8,7 +8,7 @@ defmodule DigitalOcean.NetworksTest do
 
   test "test network struct completion", %{fixtures: d} do
     networks = for droplet <- d.droplets do
-      DigitalOcean.Networks.to_struct(droplet.networks)
+      DigitalOcean.Networks.as_struct(droplet.networks)
     end
     assert length(networks) == 2
 

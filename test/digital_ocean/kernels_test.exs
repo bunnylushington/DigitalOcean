@@ -8,7 +8,7 @@ defmodule DigitalOcean.KernelsTest do
   
   test "test kernel struct creation", %{fixtures: d} do
     kernels = for droplet <- d.droplets do
-      DigitalOcean.Kernels.Kernel.to_struct(droplet.kernel)
+      DigitalOcean.Kernels.Kernel.as_struct(droplet.kernel)
     end
     assert Enum.all?(kernels,
       fn(k) -> k.__struct__ == DigitalOcean.Kernels.Kernel end)
