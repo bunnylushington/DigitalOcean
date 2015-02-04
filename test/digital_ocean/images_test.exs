@@ -40,5 +40,17 @@ defmodule DigitalOcean.ImagesTest do
     res = for _ <- s, do: :ok
     assert res == List.duplicate(:ok, Enum.count(s))
   end
+
+  @tag :external
+  test "retrieve images, single images" do
+    s = DigitalOcean.images!(:private)
+    assert {:ok, ^s} = DigitalOcean.images(:private)
+    record = Enum.fetch!(s, 0)
+    assert Enum.all?(s, fn(x) -> x.public == false end)
+    assert ^record = DigitalOcean.image!(record.id)
+    redmine = DigitalOcean.image!("redmine")
+    assert redmine.slug == "redmine"
+  end
+    
   
 end

@@ -156,7 +156,47 @@ defmodule DigitalOcean do
     domain_record(domain, id) |> raise_error_or_return
   end
 
+  # ------------------------------------------------------- IMAGES.
+  @doc """
+  List all images.  
+
+  An optional parameter may be provided specifying which type of
+  images to list, :private, :distribution, or :application.  If the
+  parameter is absent all images are returned.
+  """
+  @spec images(atom) :: {:ok, DigitalOcean.Images.t} | {:error, map}
+  def images(type \\ nil) do
+    DigitalOcean.Images.as_struct(DigOc.images!(type))
+  end
+
+  @doc """
+  Like `images/1` but raises DigitalOceanError
+  """
+  @spec images!(atom) :: DigitalOcean.Images
+  def images!(type \\ nil), do: images(type) |> raise_error_or_return
   
+
+  @doc """
+  Retrieve an image by ID or slug.
+  """
+  @spec image(String.t | integer) ::
+    {:ok, DigitalOcean.Images.Image.t} | {:error, map}
+  def image(id_or_slug) do
+    DigOc.image!(id_or_slug)
+    |> error_or_singleton(:image, DigitalOcean.Images.Image)
+  end
+
+  @doc """
+  Like `image/1` but raises DigitalOceanError.
+  """
+  @spec image!(String. | integer) :: DigitalOcean.Images.Image
+  def image!(id_or_slug) do
+    image(id_or_slug) |> raise_error_or_return
+  end
+      
+  
+  
+    
   # ------------------------------------------------------- SSH KEYS.
   @doc """
   Requests the list of SSH keys from the server.  
