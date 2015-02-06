@@ -31,11 +31,18 @@ defmodule DigitalOcean.DropletsTest do
   end
 
   @tag :external
-  test "list all droplets" do
+
+  # -- NB: this sometimes fails!  The failure happens because the
+  # -- region object that's returned isn't consistent request to
+  # -- request.  A ticket's been opened with DO.
+  
+  test "list all droplets, specific droplet" do
     s = DigitalOcean.droplets!
+    IO.puts inspect s
     {:ok, ^s} = DigitalOcean.droplets
-    
+    d = Enum.at(s, 0)
+    droplet = DigitalOcean.droplet!(d.id)
+    assert d == droplet
   end
-    
   
 end

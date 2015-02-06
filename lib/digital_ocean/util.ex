@@ -75,7 +75,11 @@ defmodule DigitalOcean.Util do
     if DigitalOcean.Util.error?(result, key) do
       {:error, result}
     else
-      {:ok, struct(type, result[key])}
+      if DigitalOcean.Macros.as_struct_implemented(type) do
+        {:ok, apply(type, :as_struct, [result[key]])}
+      else
+        {:ok, struct(type, result[key])}
+      end
     end
   end
 

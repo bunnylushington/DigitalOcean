@@ -172,6 +172,23 @@ defmodule DigitalOcean do
   """
   def droplets!, do: droplets |> raise_error_or_return
 
+  @doc """
+  Retrieve one droplet by ID.
+  """
+  @spec droplet(integer) ::
+    {:ok, DigitalOcean.Droplets.Droplet.t} | {:error, map}
+  def droplet(id) do
+    DigOc.droplet!(id)
+    |> error_or_singleton(:droplet, DigitalOcean.Droplets.Droplet)
+  end
+
+  @doc """
+  Like `droplet/1` but raises DigitalOceanError.
+  """
+  @spec droplet!(integer) :: DigitalOcean.Droplets.Droplet.t
+  def droplet!(id) do
+    droplet(id) |> raise_error_or_return
+  end
   
   # ------------------------------------------------------- IMAGES.
   @doc """
