@@ -17,5 +17,25 @@ defmodule DigitalOcean.DropletsTest do
     assert first.image.__struct__    == DigitalOcean.Images.Image
   end
 
+  test "droplets are enums", %{fixtures: d} do
+    {:ok, s} = DigitalOcean.Droplets.as_struct(d)
+    assert Enum.count(s) == s.meta.total
+    assert Enum.member?(s, "do")
+    assert Enum.member?(s, 112233)
+  end
+
+  test "droplets as interable", %{fixtures: d} do
+    {:ok, s} = DigitalOcean.Droplets.as_struct(d)
+    res = for _ <- s, do: :ok
+    assert res == List.duplicate(:ok, Enum.count(s))
+  end
+
+  @tag :external
+  test "list all droplets" do
+    s = DigitalOcean.droplets!
+    {:ok, ^s} = DigitalOcean.droplets
+    
+  end
+    
   
 end

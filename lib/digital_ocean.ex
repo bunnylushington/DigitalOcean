@@ -143,7 +143,8 @@ defmodule DigitalOcean do
   @doc """
   Requests a specific domain record in a domain.
   """
-  @spec domain_record(String.t, integer) :: DigitalOcean.DomainRecords.Record.t
+  @spec domain_record(String.t, integer) ::
+    {:ok, DigitalOcean.DomainRecords.Record.t} | {:error, map}
   def domain_record(domain, id) do
     DigOc.Domain.record!(domain, id)
     |> error_or_singleton(:domain_record, DigitalOcean.DomainRecords.Record)
@@ -152,10 +153,26 @@ defmodule DigitalOcean do
   @doc """
   Like `domain_record/2` but raises DigitalOceanError.
   """
+  @spec domain_record(Sring.t, integer) :: DigitalOcean.DomainRecords.Record.t
   def domain_record!(domain, id) do
     domain_record(domain, id) |> raise_error_or_return
   end
 
+  # ------------------------------------------------------- DROPLETS.
+  @doc """
+  List all droplets.
+  """
+  @spec droplets() :: {:ok, DigitalOcean.Droplets.t} | {:error, map}
+  def droplets do
+    DigitalOcean.Droplets.as_struct(DigOc.droplets!)
+  end
+
+  @doc """
+  Like `droplets/0` but raises DigitalOceanError.
+  """
+  def droplets!, do: droplets |> raise_error_or_return
+
+  
   # ------------------------------------------------------- IMAGES.
   @doc """
   List all images.  
