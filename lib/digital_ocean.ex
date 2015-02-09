@@ -190,6 +190,21 @@ defmodule DigitalOcean do
     droplet(id) |> raise_error_or_return
   end
   
+  @doc """
+  List kernels available for specified droplet.
+  """
+  @spec kernels(integer) :: {:ok, DigitalOcean.Kernels.t} | {:error, map}
+  def kernels(id) do
+    DigOc.Droplet.kernels!(id) |> DigitalOcean.Kernels.as_struct
+  end
+
+  @doc """
+  Like `kernels/1` but raises DigialOceanError.
+  """
+  @spec kernels!(integer) :: DigitalOcean.Kernels.t
+  def kernels!(id), do: kernels(id) |> raise_error_or_return
+
+
   # ------------------------------------------------------- IMAGES.
   @doc """
   List all images.  

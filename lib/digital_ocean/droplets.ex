@@ -12,8 +12,6 @@ defmodule DigitalOcean.Droplets do
   Macros.define_as_struct(:droplets, DigitalOcean.Droplets.Droplet)
   Macros.implement_enumerable(:droplets, DigitalOcean.Droplets)
 
-  
-
   defmodule Droplet do
     @moduledoc """
     Single Digital Ocean Droplet Struct
