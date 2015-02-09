@@ -46,7 +46,6 @@ defmodule DigitalOcean.DropletsTest do
     # droplet = DigitalOcean.droplet!(d.id)
     # assert d == droplet
   end
-  
 
   @tag :external
   test "list available kernels" do
@@ -56,6 +55,16 @@ defmodule DigitalOcean.DropletsTest do
     assert kernels.__struct__ == DigitalOcean.Kernels
     first = Enum.at(kernels, 0)
     assert first.__struct__ == DigitalOcean.Kernels.Kernel
+  end
+
+  @tag :external
+  test "list available snapshots, backups" do
+    s = DigitalOcean.droplets!
+    d = Enum.at(s, 0)
+    snapshots = DigitalOcean.snapshots!(d.id)
+    assert snapshots.__struct__ == DigitalOcean.Images
+    backups = DigitalOcean.backups!(d.id)
+    assert backups.__struct__ == DigitalOcean.Images
   end
 
 end

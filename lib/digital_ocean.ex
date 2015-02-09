@@ -204,7 +204,35 @@ defmodule DigitalOcean do
   @spec kernels!(integer) :: DigitalOcean.Kernels.t
   def kernels!(id), do: kernels(id) |> raise_error_or_return
 
+  @doc """
+  List snapshots created from a droplet.
+  """
+  @spec snapshots(integer) :: {:ok, DigitalOcean.Images.t} | {:error, map}
+  def snapshots(id) do
+    DigOc.Droplet.snapshots!(id) |> DigitalOcean.Images.as_struct
+  end
 
+  @doc """
+  Like `snapshot/1` but raises DigitalOceanError.
+  """
+  @spec snapshots!(integer) :: DigitalOcean.Images.t
+  def snapshots!(id), do: snapshots(id) |> raise_error_or_return
+  
+  @doc """
+  List backups taken of a droplet.
+  """
+  @spec backups(integer) :: {:ok, DigitalOcean.Images.t} | {:error, map}
+  def backups(id) do
+    DigOc.Droplet.backups!(id) |> DigitalOcean.Images.as_struct
+  end
+
+  @doc """
+  Like `backups/1` but raises DigitalOceanError.
+  """
+  @spec backups!(integer) :: DigitalOcean.Images
+  def backups!(id), do: backups(id) |> raise_error_or_return
+
+    
   # ------------------------------------------------------- IMAGES.
   @doc """
   List all images.  
