@@ -271,7 +271,39 @@ defmodule DigitalOcean do
            %{ message: "Droplet upgrade request failed." }
     end
   end
-    
+
+  @doc """
+  List neighbors of the specified droplet.
+  """
+  @spec droplet_neighbors(integer) ::
+    {:ok, DigitalOcean.Droplets.t} | {:error, map}
+  def droplet_neighbors(id) do
+    DigOc.droplet_neighbors!(id) |> DigitalOcean.Droplets.as_struct
+  end
+
+  @doc """
+  Like `droplet_neighbors/1` but raises DigitalOceanError
+  """
+  @spec droplet_neighbors!(integer) :: DigitalOcean.Droplets.t
+  def droplet_neighbors!(id) do
+    droplet_neighbors(id) |> raise_error_or_return
+  end
+
+  @doc """
+  Requests all groups of neighbors.
+  """
+  @spec droplet_neighbors :: {:ok, DigitalOcean.Neighbors.t} | {:error, map}
+  def droplet_neighbors do
+    DigOc.droplet_neighbors! |> DigitalOcean.Neighbors.as_struct
+  end
+
+  @doc """
+  Like `droplet_neighbors/1` but raises DigitalOceanError.
+  """
+  @spec droplet_neighbors! :: DigitalOcean.Neighbors.t
+  def droplet_neighbors!, do: droplet_neighbors |> raise_error_or_return
+  
+  
   # ------------------------------------------------------- IMAGES.
   @doc """
   List all images.  

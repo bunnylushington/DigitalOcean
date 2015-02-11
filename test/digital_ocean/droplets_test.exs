@@ -58,7 +58,7 @@ defmodule DigitalOcean.DropletsTest do
   end
 
   @tag :external
-  test "list available snapshots, backups, actions" do
+  test "list available snapshots, backups, actions, neighbors" do
     s = DigitalOcean.droplets!
     d = Enum.at(s, 0)
     snapshots = DigitalOcean.snapshots!(d.id)
@@ -67,6 +67,8 @@ defmodule DigitalOcean.DropletsTest do
     assert backups.__struct__ == DigitalOcean.Images
     actions = DigitalOcean.actions!({:droplet, d.id})
     assert actions.__struct__ == DigitalOcean.Actions
+    neighbors = DigitalOcean.droplet_neighbors!(d.id)
+    assert neighbors.__struct__ == DigitalOcean.Droplets
   end
 
 end
