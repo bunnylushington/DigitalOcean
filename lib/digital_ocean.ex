@@ -19,9 +19,7 @@ defmodule DigitalOcean do
   Requests the account information associated with the current user.
   """
   @spec account() :: {:ok, DigitalOcean.Account.t} | {:error, map}
-  def account do
-    DigitalOcean.Account.as_struct(DigOc.account!)
-  end
+  def account, do: DigOc.account! |> DigitalOcean.Account.as_struct
 
   @doc """
   Like `account/0` but raises DigitalOceanError.
@@ -31,6 +29,19 @@ defmodule DigitalOcean do
     
     
   # ------------------------------------------------------- ACTIONS.    
+
+  @doc """
+  Shortcut for `actions(:all)`.
+  """
+  @spec actions(integer) :: {:ok, DigitalOcean.Actions.t} | {:error, map}
+  def actions(per_page) when is_integer(per_page), do: actions(:all, per_page)
+
+  @doc """
+  Shortcut for `actions!(all)` (raises DigitalOceanError).
+  """
+  @spec actions(integer) :: DigitalOcean.Actions.t
+  def actions!(per_page) when is_integer(per_page), do: actions!(:all, per_page)
+
   @doc """ 
   Requests actions associated with the account.  
 
@@ -66,10 +77,6 @@ defmodule DigitalOcean do
   actions but might require multiple HTTP requests.
 
   """
-
-  def actions(per_page) when is_integer(per_page), do: actions(:all, per_page)
-  def actions!(per_page) when is_integer(per_page), do: actions!(:all, per_page)
-  
   @spec actions(atom | {atom, integer}, integer) ::
     {:ok, DigitalOcean.Actions.t} | {:error, map}
   def actions(type \\ :all, per_page \\ actions_per_page) do
@@ -87,7 +94,7 @@ defmodule DigitalOcean do
   def actions!(type \\ :all, per_page \\ actions_per_page) do
     actions(type, per_page) |> raise_error_or_return
   end
-  
+
   @doc """
   Requests a specific action from the server.
   """
@@ -109,9 +116,7 @@ defmodule DigitalOcean do
   Requests the list of Domains from the server.
   """
   @spec domains :: {:ok, DigitalOcean.Domains.t} | {:error, map}
-  def domains do
-    DigitalOcean.Domains.as_struct(DigOc.domains!)
-  end
+  def domains, do: DigOc.domains! |> DigitalOcean.Domains.as_struct
 
   @doc """
   Like `domains/0` but raises DigitalOceanError.
@@ -142,7 +147,7 @@ defmodule DigitalOcean do
   @spec domain_records(String.t) :: {:ok, DigitalOcean.DomainRecords.t} |
                                     {:error, map}
   def domain_records(domain) do
-    DigitalOcean.DomainRecords.as_struct(DigOc.Domain.records!(domain))
+    DigOc.Domain.records!(domain) |> DigitalOcean.DomainRecords.as_struct
   end
 
   @doc """
@@ -176,9 +181,7 @@ defmodule DigitalOcean do
   List all droplets.
   """
   @spec droplets() :: {:ok, DigitalOcean.Droplets.t} | {:error, map}
-  def droplets do
-    DigitalOcean.Droplets.as_struct(DigOc.droplets!)
-  end
+  def droplets, do: DigOc.droplets! |> DigitalOcean.Droplets.as_struct
 
   @doc """
   Like `droplets/0` but raises DigitalOceanError.
@@ -256,7 +259,7 @@ defmodule DigitalOcean do
   """
   @spec images(atom) :: {:ok, DigitalOcean.Images.t} | {:error, map}
   def images(type \\ nil) do
-    DigitalOcean.Images.as_struct(DigOc.images!(type))
+    DigOc.images!(type) |> DigitalOcean.Images.as_struct
   end
 
   @doc """
@@ -292,9 +295,7 @@ defmodule DigitalOcean do
   Requests the list of SSH keys from the server.  
   """
   @spec keys :: {:ok, DigitalOcean.Keys.t} | {:error, map}
-  def keys do
-    DigitalOcean.Keys.as_struct(DigOc.keys!)
-  end
+  def keys, do: DigOc.keys! |> DigitalOcean.Keys.as_struct
 
   @doc """
   Like `keys/0` but raises DigitalOceanError.
@@ -325,9 +326,7 @@ defmodule DigitalOcean do
   Requests the list of regions from the server.
   """
   @spec regions :: {:ok, DigitalOcean.Regions.t} | {:error, map}
-  def regions do
-    DigitalOcean.Regions.as_struct(DigOc.regions!)
-  end
+  def regions, do: DigOc.regions! |> DigitalOcean.Regions.as_struct
 
   @doc """
   Like `regions/0` but raises DigitalOceanError.
@@ -341,9 +340,7 @@ defmodule DigitalOcean do
   Requests the list of sizes from the server.
   """
   @spec sizes :: {:ok, DigitalOcean.Sizes.t} | {:error, map}
-  def sizes do
-    DigitalOcean.Sizes.as_struct(DigOc.sizes!)
-  end
+  def sizes, do: DigOc.sizes! |> DigitalOcean.Sizes.as_struct
 
   @doc """
   Like `sizes/0` but raises DigitalOceanError.
