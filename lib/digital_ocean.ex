@@ -248,6 +248,29 @@ defmodule DigitalOcean do
   @spec backups!(integer) :: DigitalOcean.Images
   def backups!(id), do: backups(id) |> raise_error_or_return
 
+  @doc """
+  List any droplet upgrades.
+
+  NB: this is untested against production data (because I haven't been
+  able to run tests when I had upgrades pending).
+  """
+  @spec droplet_upgrades :: [DigitalOcean.Upgrades.Upgrade.t]
+  def droplet_upgrades do
+    DigOc.Droplet.upgrades! |> DigitalOcean.Upgrades.as_list
+  end
+  
+  @doc """
+  Like droplet_upgrades/0 but raises DigitalOceanError.
+  """
+  @spec droplet_upgrades! :: [DigitalOcean.Upgrades.Upgrade.t]
+  def droplet_upgrades! do
+    case droplet_upgrades do
+      [] -> []
+      x when is_list(x) -> x
+      _ -> raise DigitalOceanError,
+           %{ message: "Droplet upgrade request failed." }
+    end
+  end
     
   # ------------------------------------------------------- IMAGES.
   @doc """
