@@ -37,6 +37,10 @@ defmodule DigitalOcean do
   Actions are events that have occured on resources (e.g., rebooting a
   droplet).
 
+  Two parameters may optionally be specified: type and per_page.  Type
+  may be the atom `:all` (the default) or the tuple `{:droplet,
+  droplet_id}`.  The per_page value is explained below.
+
   The number of actions returned will depend on a number of factors.
   If an argument is passed to `actions/1` that value takes precedent.
   If the configuration item `:actions_per_page` is set, that value
@@ -62,17 +66,26 @@ defmodule DigitalOcean do
   actions but might require multiple HTTP requests.
 
   """
-  @spec actions(integer) :: {:ok, DigitalOcean.Actions.t} | {:error, map}
-  def actions(per_page \\ actions_per_page) do
-    DigitalOcean.Actions.as_struct(DigOc.actions!(per_page))
+
+  def actions(per_page) when is_integer(per_page), do: actions(:all, per_page)
+  def actions!(per_page) when is_integer(per_page), do: actions!(:all, per_page)
+  
+  @spec actions(atom | {atom, integer}, integer) ::
+    {:ok, DigitalOcean.Actions.t} | {:error, map}
+  def actions(type \\ :all, per_page \\ actions_per_page) do
+    case type do
+      :all -> DigOc.actions!(per_page)
+      {:droplet, id} -> DigOc.Droplet.actions!(id)
+    end
+    |> DigitalOcean.Actions.as_struct
   end
 
   @doc """
-  Like `actions!/1` but raises DigitalOceanError.
+  Like `actions/2` but raises DigitalOceanError.
   """
-  @spec actions!(integer) :: DigitalOcean.Actions.t
-  def actions!(per_page \\ actions_per_page) do
-    actions(per_page) |> raise_error_or_return
+  @spec actions!(atom, integer) :: DigitalOcean.Actions.t
+  def actions!(type \\ :all, per_page \\ actions_per_page) do
+    actions(type, per_page) |> raise_error_or_return
   end
   
   @doc """
